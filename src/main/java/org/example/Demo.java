@@ -17,8 +17,9 @@ public class Demo {
 
         KeyType type;
         terminal.setCursorVisible(false);
-        for (int i = 0; i < 5; i++) {
-            for (int column = 0; column < 10; column++) {
+        while (true) {
+
+            for (int column = 0; column < 20; column++) {
                 terminal.setCursorPosition(4, column);
                 terminal.putCharacter('\u263B');
                 terminal.setCursorPosition(5, column);
@@ -34,6 +35,38 @@ public class Demo {
                 terminal.setCursorPosition(10, column);
                 terminal.putCharacter('\u263B');
                 terminal.setCursorPosition(11, column);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(20, column);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(21, column);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(22, column);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(23, column);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(4, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(5, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(6, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(7, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(8, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(9, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(10, column+5);
+                terminal.putCharacter('☻');
+                terminal.setCursorPosition(11, column+5);
+                terminal.putCharacter('☻');
+                terminal.setCursorPosition(20, column+5);
+                terminal.putCharacter('☻');
+                terminal.setCursorPosition(21, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(22, column+5);
+                terminal.putCharacter('\u263B');
+                terminal.setCursorPosition(23, column+5);
                 terminal.putCharacter('\u263B');
                 Thread.sleep(500);
                 terminal.flush();
@@ -53,25 +86,41 @@ public class Demo {
                 terminal.putCharacter(' ');
                 terminal.setCursorPosition(11, column);
                 terminal.putCharacter(' ');
-            }
-        }
-
-
-        String s = "Find your way to the coins";
-        String s1 = "and watch out for the enemies.";
-        for (int i = 0; i <= s.length() - 1; i++) {
-            terminal.flush();
-            terminal.setCursorPosition(i, 1);
-            terminal.putCharacter(s.charAt(i));
-            Thread.sleep(200);
-            terminal.flush();
-            for (i = 0; i <= s1.length() - 1; i++) {
+                terminal.setCursorPosition(20, column);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(21, column);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(22, column);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(23, column);
+                terminal.putCharacter(' ');
+                Thread.sleep(500);
                 terminal.flush();
-                terminal.setCursorPosition(i, 1);
-                terminal.putCharacter(s.charAt(i));
-                Thread.sleep(200);
+                terminal.setCursorPosition(4, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(5, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(6, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(7, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(8, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(9, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(10, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(11, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(20, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(21, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(22, column+5);
+                terminal.putCharacter(' ');
+                terminal.setCursorPosition(23, column+5);
+                terminal.putCharacter(' ');
             }
-            terminal.flush();
         }
     }
 }
