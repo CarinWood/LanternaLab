@@ -8,7 +8,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Demo {
+public class Game {
     public static void main(String[] args) throws IOException, InterruptedException {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         Terminal terminal = terminalFactory.createTerminal();
@@ -63,7 +63,7 @@ public class Demo {
         diamonds.add(new Diamond(60,10));
         diamonds.add(new Diamond(70,5));
 
-        //startScreen(terminal);
+        startScreen(terminal);
 
 
 
@@ -72,7 +72,7 @@ public class Demo {
             terminal.setCursorVisible(false);
             x = 10;
             y = 10;
-            final char player = 'X';
+            final char player = '\u265c';
             terminal.setCursorPosition(x, y);
             terminal.putCharacter(player);
 
@@ -88,13 +88,10 @@ public class Demo {
                         moveEnemiesTopToDown(terminal, enemiesTopToDown, diamonds);
                         moveEnemiesRightToLeft(terminal, enemiesRightLeft, diamonds);
                         moveEnemiesDownToTop(terminal, enemiesDownToTop, diamonds);
-                        grabDiamonds(diamonds, terminal, x, y, points);
-                        areYouStillAlive(enemiesTopToDown, x, y, terminal, continueReadingInput, points);
-                        areYouStillAlive(enemiesDownToTop, x, y, terminal, continueReadingInput, points);
-                        areYouStillAlive(enemiesRightLeft, x, y, terminal, continueReadingInput, points);
-                        //enemyGrabDiamonds(diamonds, enemiesDownToTop, terminal);
-                        //enemyGrabDiamonds(diamonds, enemiesRightLeft, terminal);
-                        //enemyGrabDiamonds(diamonds, enemiesTopToDown, terminal);
+                        grabDiamonds(diamonds, terminal, x, y, points, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
+                        areYouStillAlive(enemiesTopToDown, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
+                        areYouStillAlive(enemiesDownToTop, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
+                        areYouStillAlive(enemiesRightLeft, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
                         generateDiamonds(diamonds, terminal);
                     }
                     Thread.sleep(5); // might throw InterruptedException
@@ -207,11 +204,11 @@ public class Demo {
             terminal.flush();
         }
     }
-    private static void grabDiamonds(ArrayList<Diamond> diamonds, Terminal terminal, int x, int y, int points) throws IOException, InterruptedException {
+    private static void grabDiamonds(ArrayList<Diamond> diamonds, Terminal terminal, int x, int y, int points, ArrayList<Enemy> enemies1, ArrayList<Enemy> enemies2, ArrayList<Enemy> enemies3) throws IOException, InterruptedException {
         for (Diamond diamond : diamonds) {
             if (diamond.getX() == x && diamond.getY() == y) {
                 terminal.setCursorPosition(diamond.getX(), diamond.getY());
-                terminal.putCharacter('X');
+                terminal.putCharacter('\u265c');
                 diamond.setX(-200);
                 diamond.setY(-200);
                 diamond.setLook(' ');
@@ -221,7 +218,7 @@ public class Demo {
             }
         }
         if(Diamond.points == diamonds.size()) {
-
+            eraseScreen(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
             String s = "YOU WON!";
             for (int i = 0; i < s.length(); i++) {
                 terminal.setCursorPosition(i+35,10);
@@ -245,10 +242,10 @@ public class Demo {
             }
         }
     }
-    private static void areYouStillAlive(ArrayList<Enemy> enemies, int x, int y,Terminal terminal, Boolean continueReadingInput, int points) throws IOException, InterruptedException {
+    private static void areYouStillAlive(ArrayList<Enemy> enemies, int x, int y,Terminal terminal, Boolean continueReadingInput, int points, ArrayList<Diamond> diamonds, ArrayList<Enemy> enemies1, ArrayList<Enemy> enemies2, ArrayList<Enemy> enemies3) throws IOException, InterruptedException {
         for (Enemy enemy : enemies) {
             if (enemy.getRow() == y && enemy.getCol() == x) {
-              //  eraseScreen(terminal, diamonds);
+                eraseScreen(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
                 System.out.println("Game Over");
                 System.out.println(points);
                 terminal.bell();
@@ -271,7 +268,7 @@ public class Demo {
 
     private static void startScreen(Terminal terminal) throws IOException, InterruptedException {
         String str = "Try to grab all the diamonds and avoid the mean smileys!";
-        String str2 = "Control the character (X) with the arrow keys!";
+        String str2 = "Control the character (\u265c) with the arrow keys!";
         terminal.setCursorVisible(false);
         for (int i = 0; i < str.length(); i++) {
             terminal.setCursorPosition(10+i, 8);
@@ -316,19 +313,19 @@ public class Demo {
             terminal.flush();
         }
         for(Enemy enemy: enemies) {
-            terminal.setCursorPosition(enemy.getCol(), enemy.getRow());
+            terminal.setCursorPosition(enemy.getCol(), enemy.getRow()-1);
             terminal.putCharacter(' ');
             terminal.flush();
         }
 
         for(Enemy enemy: enemies2) {
-            terminal.setCursorPosition(enemy.getCol(), enemy.getRow());
+            terminal.setCursorPosition(enemy.getCol(), enemy.getRow()+1);
             terminal.putCharacter(' ');
             terminal.flush();
         }
 
         for(Enemy enemy: enemies3) {
-            terminal.setCursorPosition(enemy.getCol(), enemy.getRow());
+            terminal.setCursorPosition(enemy.getCol()+1, enemy.getRow());
             terminal.putCharacter(' ');
             terminal.flush();
         }
