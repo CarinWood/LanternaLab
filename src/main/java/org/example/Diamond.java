@@ -4,6 +4,7 @@ public class Diamond {
     int x;
     int y;
     char look;
+    static int points;
 
     public int getX() {
         return x;
@@ -34,4 +35,9 @@ public class Diamond {
         this.y = y;
         look = '\u2666';
     }
+    public static int takenDiamonds() {
+        points++;
+        return points;
+    }
+
 }

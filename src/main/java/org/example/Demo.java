@@ -84,13 +84,17 @@ public class Demo {
                 do {
                     tick++;
                     if (tick % 150 == 0) {
-                        moveEnemiesTopToDown(terminal, enemiesTopToDown);
-                        moveEnemiesRightToLeft(terminal, enemiesRightLeft);
+                        moveEnemiesTopToDown(terminal, enemiesTopToDown, diamonds);
+                        moveEnemiesRightToLeft(terminal, enemiesRightLeft, diamonds);
                         moveEnemiesDownToTop(terminal, enemiesDownToTop, diamonds);
                         grabDiamonds(diamonds, terminal, x, y, points);
                         areYouStillAlive(enemiesTopToDown, x, y, terminal, continueReadingInput, points);
                         areYouStillAlive(enemiesDownToTop, x, y, terminal, continueReadingInput, points);
                         areYouStillAlive(enemiesRightLeft, x, y, terminal, continueReadingInput, points);
+                        //enemyGrabDiamonds(diamonds, enemiesDownToTop, terminal);
+                        //enemyGrabDiamonds(diamonds, enemiesRightLeft, terminal);
+                        //enemyGrabDiamonds(diamonds, enemiesTopToDown, terminal);
+                        generateDiamonds(diamonds, terminal);
                     }
                     Thread.sleep(5); // might throw InterruptedException
                     keyStroke = terminal.pollInput();
@@ -144,7 +148,7 @@ public class Demo {
         }
     }
     static int row = 1;
-    private static void moveEnemiesTopToDown(Terminal terminal, ArrayList<Enemy> enemies) throws IOException, InterruptedException {
+    private static void moveEnemiesTopToDown(Terminal terminal, ArrayList<Enemy> enemies, ArrayList<Diamond> diamonds) throws IOException, InterruptedException {
         for (int i = 0; i < enemies.size(); i++) {
                 terminal.setCursorPosition(enemies.get(i).getCol(), enemies.get(i).getRow());
                 terminal.putCharacter(enemies.get(i).getLook());
@@ -160,7 +164,7 @@ public class Demo {
             }
         }
     }
-    private static void moveEnemiesRightToLeft(Terminal terminal, ArrayList<Enemy> enemies) throws IOException, InterruptedException {
+    private static void moveEnemiesRightToLeft(Terminal terminal, ArrayList<Enemy> enemies, ArrayList<Diamond> diamonds) throws IOException, InterruptedException {
         for (int i = 0; i < enemies.size(); i++) {
             terminal.setCursorPosition(enemies.get(i).getCol(), enemies.get(i).getRow());
             terminal.putCharacter(enemies.get(i).getLook());
@@ -193,12 +197,6 @@ public class Demo {
                 terminal.flush();
                 enemies.get(i).setRow(20);
             }
-            for (Diamond diamond : diamonds) {
-                if (diamond.getY() == enemies.get(i).getRow() && diamond.getX() == enemies.get(i).getCol()) {
-                    terminal.setCursorPosition(diamond.getX(),diamond.getY());
-                    terminal.putCharacter(diamond.getLook());
-                }
-            }
         }
     }
     private static void generateDiamonds(ArrayList<Diamond> diamonds, Terminal terminal) throws IOException {
@@ -213,9 +211,24 @@ public class Demo {
             if (diamond.getX() == x && diamond.getY() == y) {
                 terminal.setCursorPosition(diamond.getX(), diamond.getY());
                 terminal.putCharacter('X');
+                diamond.setX(-200);
+                diamond.setY(-200);
+                diamond.setLook(' ');
                 terminal.flush();
-                //System.out.println(points);
-                //diamonds.remove(diamond);
+                Diamond.takenDiamonds();
+                System.out.println(Diamond.points);
+            }
+        }
+    }
+
+    private static void enemyGrabDiamonds(ArrayList<Diamond> diamonds, ArrayList<Enemy> enemies, Terminal terminal) throws IOException {
+        for (Diamond diamond : diamonds) {
+            for (Enemy enemy : enemies) {
+                if (diamond.getX() == enemy.getCol() && diamond.getY() == enemy.getRow()) {
+                    terminal.setCursorPosition(diamond.getX(), diamond.getY()-1);
+                    terminal.putCharacter(diamond.getLook());
+                    terminal.flush();
+                }
             }
         }
     }
