@@ -62,7 +62,8 @@ public class Demo {
         diamonds.add(new Diamond(55,18));
         diamonds.add(new Diamond(60,10));
         diamonds.add(new Diamond(70,5));
-        generateDiamonds(diamonds, terminal);
+
+        //startScreen(terminal);
 
 
 
@@ -206,7 +207,7 @@ public class Demo {
             terminal.flush();
         }
     }
-    private static void grabDiamonds(ArrayList<Diamond> diamonds, Terminal terminal, int x, int y, int points) throws IOException {
+    private static void grabDiamonds(ArrayList<Diamond> diamonds, Terminal terminal, int x, int y, int points) throws IOException, InterruptedException {
         for (Diamond diamond : diamonds) {
             if (diamond.getX() == x && diamond.getY() == y) {
                 terminal.setCursorPosition(diamond.getX(), diamond.getY());
@@ -219,6 +220,18 @@ public class Demo {
                 System.out.println(Diamond.points);
             }
         }
+        if(Diamond.points == diamonds.size()) {
+
+            String s = "YOU WON!";
+            for (int i = 0; i < s.length(); i++) {
+                terminal.setCursorPosition(i+35,10);
+                terminal.putCharacter(s.charAt(i));
+            }
+            terminal.flush();
+            Thread.sleep(3000);
+            terminal.close();
+        }
+
     }
 
     private static void enemyGrabDiamonds(ArrayList<Diamond> diamonds, ArrayList<Enemy> enemies, Terminal terminal) throws IOException {
@@ -235,12 +248,13 @@ public class Demo {
     private static void areYouStillAlive(ArrayList<Enemy> enemies, int x, int y,Terminal terminal, Boolean continueReadingInput, int points) throws IOException, InterruptedException {
         for (Enemy enemy : enemies) {
             if (enemy.getRow() == y && enemy.getCol() == x) {
+              //  eraseScreen(terminal, diamonds);
                 System.out.println("Game Over");
                 System.out.println(points);
                 terminal.bell();
                 String gameOver = "Game Over";
                 for (int i = 0; i < gameOver.length(); i++) {
-                    terminal.setCursorPosition(i+10,20);
+                    terminal.setCursorPosition(i+35,10);
                     terminal.putCharacter(gameOver.charAt(i));
 
 
@@ -248,8 +262,75 @@ public class Demo {
                 terminal.flush();
                 Thread.sleep(3000);
                 terminal.close();
+
+
         }
 
+        }
+    }
+
+    private static void startScreen(Terminal terminal) throws IOException, InterruptedException {
+        String str = "Try to grab all the diamonds and avoid the mean smileys!";
+        String str2 = "Control the character (X) with the arrow keys!";
+        terminal.setCursorVisible(false);
+        for (int i = 0; i < str.length(); i++) {
+            terminal.setCursorPosition(10+i, 8);
+            terminal.putCharacter(str.charAt(i));
+            terminal.flush();
+            Thread.sleep(100);
+        }
+
+        for (int i = 0; i < str2.length(); i++) {
+            terminal.setCursorPosition(10+i, 10);
+            terminal.putCharacter(str2.charAt(i));
+            terminal.flush();
+            Thread.sleep(100);
+        }
+        Thread.sleep(1000);
+        for (int i = 0; i < str.length(); i++) {
+            terminal.setCursorPosition(10+i, 8);
+            terminal.putCharacter(' ');
+            terminal.flush();
+        }
+
+        for (int i = 0; i < str2.length(); i++) {
+            terminal.setCursorPosition(10+i, 10);
+            terminal.putCharacter(' ');
+            terminal.flush();
+        }
+
+
+
+
+    }
+
+    private static void eraseScreen(Terminal terminal, ArrayList<Diamond> diamonds, ArrayList<Enemy> enemies, ArrayList<Enemy> enemies2, ArrayList<Enemy> enemies3, int x, int y) throws IOException {
+
+        terminal.setCursorPosition(x, y);
+        terminal.putCharacter(' ');
+        terminal.flush();
+
+        for(Diamond diamond: diamonds) {
+            terminal.setCursorPosition(diamond.getX(), diamond.getY());
+            terminal.putCharacter(' ');
+            terminal.flush();
+        }
+        for(Enemy enemy: enemies) {
+            terminal.setCursorPosition(enemy.getCol(), enemy.getRow());
+            terminal.putCharacter(' ');
+            terminal.flush();
+        }
+
+        for(Enemy enemy: enemies2) {
+            terminal.setCursorPosition(enemy.getCol(), enemy.getRow());
+            terminal.putCharacter(' ');
+            terminal.flush();
+        }
+
+        for(Enemy enemy: enemies3) {
+            terminal.setCursorPosition(enemy.getCol(), enemy.getRow());
+            terminal.putCharacter(' ');
+            terminal.flush();
         }
     }
 
