@@ -19,14 +19,14 @@ public class Game {
         int points = 0;
 
         ArrayList<Enemy> enemiesTopToDown = new ArrayList<>();
-        enemiesTopToDown.add(new Enemy(4,1));
-        enemiesTopToDown.add(new Enemy(5,1));
-        enemiesTopToDown.add(new Enemy(6,1));
-        enemiesTopToDown.add(new Enemy(7,1));
-        enemiesTopToDown.add(new Enemy(8,1));
-        enemiesTopToDown.add(new Enemy(9,1));
-        enemiesTopToDown.add(new Enemy(10,1));
-        enemiesTopToDown.add(new Enemy(11,1));
+        enemiesTopToDown.add(new Enemy(4,2));
+        enemiesTopToDown.add(new Enemy(5,2));
+        enemiesTopToDown.add(new Enemy(6,2));
+        enemiesTopToDown.add(new Enemy(7,2));
+        enemiesTopToDown.add(new Enemy(8,2));
+        enemiesTopToDown.add(new Enemy(9,2));
+        enemiesTopToDown.add(new Enemy(10,2));
+        enemiesTopToDown.add(new Enemy(11,2));
         enemiesTopToDown.add(new Enemy(20,6));
         enemiesTopToDown.add(new Enemy(21,6));
         enemiesTopToDown.add(new Enemy(22,6));
@@ -63,7 +63,9 @@ public class Game {
         diamonds.add(new Diamond(60,10));
         diamonds.add(new Diamond(70,5));
 
-        startScreen(terminal);
+
+        //startScreen(terminal);
+
 
 
 
@@ -84,7 +86,8 @@ public class Game {
                 KeyStroke keyStroke = null;
                 do {
                     tick++;
-                    if (tick % 150 == 0) {
+                    if (tick % 70 == 0) {
+
                         moveEnemiesTopToDown(terminal, enemiesTopToDown, diamonds);
                         moveEnemiesRightToLeft(terminal, enemiesRightLeft, diamonds);
                         moveEnemiesDownToTop(terminal, enemiesDownToTop, diamonds);
@@ -93,6 +96,7 @@ public class Game {
                         areYouStillAlive(enemiesDownToTop, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
                         areYouStillAlive(enemiesRightLeft, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
                         generateDiamonds(diamonds, terminal);
+                        border(terminal);
                     }
                     Thread.sleep(5); // might throw InterruptedException
                     keyStroke = terminal.pollInput();
@@ -211,7 +215,7 @@ public class Game {
                 terminal.putCharacter('\u265c');
                 diamond.setX(-200);
                 diamond.setY(-200);
-                diamond.setLook(' ');
+                diamond.setLook('\u2588');
                 terminal.flush();
                 Diamond.takenDiamonds();
                 System.out.println(Diamond.points);
@@ -219,6 +223,7 @@ public class Game {
         }
         if(Diamond.points == diamonds.size()) {
             eraseScreen(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
+            eraseBorder(terminal);
             String s = "YOU WON!";
             for (int i = 0; i < s.length(); i++) {
                 terminal.setCursorPosition(i+35,10);
@@ -246,16 +251,18 @@ public class Game {
         for (Enemy enemy : enemies) {
             if (enemy.getRow() == y && enemy.getCol() == x) {
                 eraseScreen(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
-                System.out.println("Game Over");
-                System.out.println(points);
+                eraseBorder(terminal);
                 terminal.bell();
                 String gameOver = "Game Over";
                 for (int i = 0; i < gameOver.length(); i++) {
                     terminal.setCursorPosition(i+35,10);
                     terminal.putCharacter(gameOver.charAt(i));
-
-
             }
+                String pointsText = "Score: " + Diamond.points;
+                for (int i = 0; i < pointsText.length(); i++) {
+                    terminal.setCursorPosition(i+35, 12);
+                    terminal.putCharacter(pointsText.charAt(i));
+                }
                 terminal.flush();
                 Thread.sleep(3000);
                 terminal.close();
@@ -330,5 +337,56 @@ public class Game {
             terminal.flush();
         }
     }
+
+    private static void border(Terminal terminal) throws IOException {
+
+
+            for (int row = 0; row < 24; row++) {
+                terminal.setCursorPosition(0, row);
+                terminal.putCharacter('\u2588');
+            }
+
+            for (int row = 0; row < 24; row++) {
+                terminal.setCursorPosition(80, row);
+                terminal.putCharacter('\u2588');
+            }
+
+            for (int col = 0; col <80; col++) {
+                terminal.setCursorPosition(col, 0);
+                terminal.putCharacter('\u2588');
+            }
+
+            for (int col = 0; col <80; col++) {
+                terminal.setCursorPosition(col, 24);
+                terminal.putCharacter('\u2588');
+            }
+
+
+    }private static void eraseBorder(Terminal terminal) throws IOException {
+
+
+            for (int row = 0; row < 24; row++) {
+                terminal.setCursorPosition(0, row);
+                terminal.putCharacter(' ');
+            }
+
+            for (int row = 0; row < 24; row++) {
+                terminal.setCursorPosition(80, row);
+                terminal.putCharacter(' ');
+            }
+
+            for (int col = 0; col <80; col++) {
+                terminal.setCursorPosition(col, 0);
+                terminal.putCharacter(' ');
+            }
+
+            for (int col = 0; col <80; col++) {
+                terminal.setCursorPosition(col, 24);
+                terminal.putCharacter(' ');
+            }
+
+
+    }
+
 
 }
