@@ -6,6 +6,7 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Game {
@@ -64,7 +65,7 @@ public class Game {
         diamonds.add(new Diamond(70,5));
 
 
-        //startScreen(terminal);
+        startScreen(terminal);
 
 
 
@@ -87,7 +88,6 @@ public class Game {
                 do {
                     tick++;
                     if (tick % 70 == 0) {
-
                         moveEnemiesTopToDown(terminal, enemiesTopToDown, diamonds);
                         moveEnemiesRightToLeft(terminal, enemiesRightLeft, diamonds);
                         moveEnemiesDownToTop(terminal, enemiesDownToTop, diamonds);
@@ -96,7 +96,9 @@ public class Game {
                         areYouStillAlive(enemiesDownToTop, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
                         areYouStillAlive(enemiesRightLeft, x, y, terminal, continueReadingInput, points, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft);
                         generateDiamonds(diamonds, terminal);
-                        border(terminal);
+                        hasPlayerHitWall(terminal, diamonds, enemiesTopToDown, enemiesDownToTop, enemiesRightLeft, x, y);
+                        border(terminal, x, y);
+
                     }
                     Thread.sleep(5); // might throw InterruptedException
                     keyStroke = terminal.pollInput();
@@ -338,7 +340,7 @@ public class Game {
         }
     }
 
-    private static void border(Terminal terminal) throws IOException {
+    private static void border(Terminal terminal, int x, int y) throws IOException {
 
 
             for (int row = 0; row < 24; row++) {
@@ -384,6 +386,47 @@ public class Game {
                 terminal.setCursorPosition(col, 24);
                 terminal.putCharacter(' ');
             }
+
+
+    }
+
+    private static void hasPlayerHitWall(Terminal terminal, ArrayList<Diamond> diamonds, ArrayList<Enemy> enemies1,
+    ArrayList<Enemy> enemies2, ArrayList<Enemy> enemies3, int x, int y) throws IOException, InterruptedException {
+        for (int row = 0; row < 24; row++) {
+            if(row == y && 0 == x || row == y && 79 == x) {
+                gameOver(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
+
+            }
+
+
+        }
+
+        for (int col = 0; col <80; col++) {
+            if(col == x && 0 == y || col == x && 23 == y) {
+                gameOver(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
+
+            }
+        }
+    }
+
+    private static void gameOver(Terminal terminal, ArrayList<Diamond> diamonds, ArrayList<Enemy> enemies1, ArrayList<Enemy> enemies2, ArrayList<Enemy> enemies3, int x, int y) throws IOException, InterruptedException {
+        eraseBorder(terminal);
+        eraseScreen(terminal, diamonds, enemies1, enemies2, enemies3, x, y);
+
+        terminal.bell();
+        String gameOver = "Game Over";
+        for (int i = 0; i < gameOver.length(); i++) {
+            terminal.setCursorPosition(i+35,10);
+            terminal.putCharacter(gameOver.charAt(i));
+        }
+        String pointsText = "Score: " + Diamond.points;
+        for (int i = 0; i < pointsText.length(); i++) {
+            terminal.setCursorPosition(i+35, 12);
+            terminal.putCharacter(pointsText.charAt(i));
+        }
+        terminal.flush();
+        Thread.sleep(3000);
+        terminal.close();
 
 
     }
